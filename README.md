@@ -11,7 +11,7 @@ Have the PDF attachments of your mails printed automatically
 - Save and load application settings
 - Logging application events in a log file
 
-<img src="https://github.com/TueftelTyp/AutoMailPrint/blob/main/overview.png" width="500">
+<img src="https://github.com/TueftelTyp/AutoMailPrint/blob/main/images/overview101.png" width="500">
 
 
 
