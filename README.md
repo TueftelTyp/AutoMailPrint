@@ -18,7 +18,3 @@ Have the PDF attachments of your mails printed automatically
 
 
 ----
-###### used icons
-from [iconfinder](https://www.iconfinder.com/ "iconfinder")
-- *8664917_window_minimize_icon.png*
-- *211651_close_round_icon.png*
