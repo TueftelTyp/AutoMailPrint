@@ -10,6 +10,7 @@ Have the PDF attachments of your mails printed automatically
 - Option to test the connection to an e-mail server
 - Save and load application settings
 - Logging application events in a log file
+- Autostart possible
 - Retrieved emails are automatically deleted from the mailbox
 - send mails in case of errors
 - Printer validation, if incorrect, no printing or deletion takes place
