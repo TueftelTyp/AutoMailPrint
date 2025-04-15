@@ -876,25 +876,31 @@ namespace AutoMailPrint
             {
                 if (File.Exists(filePath))
                 {
-                    // Initial creation time ermitteln oder speichern
+                    // Initiale Erstellungszeit speichern
                     if (!_fileCreationTimes.ContainsKey(filePath))
                     {
                         _fileCreationTimes[filePath] = File.GetCreationTime(filePath);
                     }
 
                     DateTime creationTime = _fileCreationTimes[filePath];
-                    DateTime cutoffDate = creationTime.AddDays(daysToKeep);
+                    DateTime nextClearDate = creationTime.AddDays(daysToKeep);
 
-                    if (creationTime < cutoffDate)
+                    // Neuberechnung bei jeder Ausführung
+                    while (DateTime.Now >= nextClearDate)
                     {
                         File.WriteAllText(filePath, string.Empty);
-                        Log($"Old log file cleared: {filePath}");
+                        Log($"{filePath} cleared (Next clean-up: {nextClearDate})");
+
+                        // nächste Leerung neu berechnen
+                        creationTime = nextClearDate; // Neuer Referenzzeitpunkt
+                        nextClearDate = nextClearDate.AddDays(daysToKeep);
+                        _fileCreationTimes[filePath] = creationTime; // Dictionary aktualisieren
                     }
                 }
             }
             catch (Exception ex)
             {
-                Log($"Error clearing old log file {filePath}: {ex.Message}");
+                Log($"Error when clearing the log file {filePath}: {ex.Message}");
             }
         }
         private void chkSendMail_CheckedChanged(object sender, EventArgs e)
