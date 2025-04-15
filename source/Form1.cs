@@ -876,7 +876,7 @@ namespace AutoMailPrint
             {
                 if (File.Exists(filePath))
                 {
-                    // Initiale Erstellungszeit speichern
+                    // Initial Erstellungszeit speichern
                     if (!_fileCreationTimes.ContainsKey(filePath))
                     {
                         _fileCreationTimes[filePath] = File.GetCreationTime(filePath);
@@ -891,6 +891,16 @@ namespace AutoMailPrint
                         File.WriteAllText(filePath, string.Empty);
                         Log($"{filePath} cleared (Next clean-up: {nextClearDate})");
 
+                        // ListView leeren, basierend auf Dateipfad
+                        if (filePath == "AMPlog.log")
+                        {
+                            lvLogs.Items.Clear();
+                        }
+                        else if (filePath == "AMPattachments.log")
+                        {
+                            lvData.Items.Clear();
+                        }
+
                         // nächste Leerung neu berechnen
                         creationTime = nextClearDate; // Neuer Referenzzeitpunkt
                         nextClearDate = nextClearDate.AddDays(daysToKeep);
@@ -903,6 +913,7 @@ namespace AutoMailPrint
                 Log($"Error when clearing the log file {filePath}: {ex.Message}");
             }
         }
+
         private void chkSendMail_CheckedChanged(object sender, EventArgs e)
         {
             tbErrorAddress.Enabled = chkSendMail.Checked;
