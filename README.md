@@ -16,7 +16,7 @@ Have the PDF attachments of your mails printed automatically
 - Printer validation, if incorrect, no printing or deletion takes place
 - Determining the storage period of the logs
 
-<img src="https://github.com/TueftelTyp/AutoMailPrint/blob/main/images/overview101.png" width="500">
+<img src="https://github.com/TueftelTyp/AutoMailPrint/blob/main/images/overview103.png" width="500">
 
 
 
