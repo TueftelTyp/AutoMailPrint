@@ -276,6 +276,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ampico.ico" />
+    <None Include="icons\sendMail.png" />
+    <None Include="icons\btnPrinters.png" />
     <None Include="icons\ctlMini.png" />
     <None Include="icons\ctlExit.png" />
     <None Include="icons\btnMini.png" />

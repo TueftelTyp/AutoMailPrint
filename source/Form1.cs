@@ -14,7 +14,9 @@ using System.Diagnostics;
 using Microsoft.Win32;
 using System.Collections.Generic;
 using System.Drawing.Printing;
-using System.Windows.Interop;
+using MailKit.Security;
+using System.Threading.Tasks;
+using System.Net.Sockets;
 
 namespace AutoMailPrint
 {
@@ -22,14 +24,33 @@ namespace AutoMailPrint
     {
         private System.Timers.Timer _timer;
         private bool _isTimerRunning = false;
-        private string _logFilePath = "AMPlog.log";
         private Point _mouseDownPos;
         private const string RegistryKeyPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
         private const string AppName = "AutoMailPrint";
         private Dictionary<string, DateTime> _fileCreationTimes = new Dictionary<string, DateTime>();
+        private readonly string appDataPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        "AutoMailPrint"
+    );
+        private string _logFilePath;
+        private string _attachmentsLogPath;
+        private string _attachmentsDir;
+        private string _settingsFilePath;
         public Form1()
         {
             InitializeComponent();
+            if (!Directory.Exists(appDataPath))
+                Directory.CreateDirectory(appDataPath);
+
+            // Pfade initialisieren
+            _logFilePath = Path.Combine(appDataPath, "AMPlog.log");
+            _attachmentsLogPath = Path.Combine(appDataPath, "AMPattachments.log");
+            _attachmentsDir = Path.Combine(appDataPath, "attachments");
+            _settingsFilePath = Path.Combine(appDataPath, "settings.xml");
+
+            // Attachments-Ordner erstellen
+            if (!Directory.Exists(_attachmentsDir))
+                Directory.CreateDirectory(_attachmentsDir);
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -71,10 +92,14 @@ namespace AutoMailPrint
                 if (protocol == "POP3")
                 {
                     TestPop3Connection(server, port, username, password, useSsl);
+                    btnTestMail.BackgroundImage = Properties.Resources.checkMailTest;
+                    btnTestMail.Enabled = false;
                 }
                 else if (protocol == "IMAP")
                 {
                     TestImapConnection(server, port, username, password, useSsl);
+                    btnTestMail.BackgroundImage = Properties.Resources.checkMailTest;
+                    btnTestMail.Enabled = false;
                 }
                 else
                 {
@@ -127,6 +152,10 @@ namespace AutoMailPrint
             }
             _isTimerRunning = !_isTimerRunning;
         }
+        private void btnPrinters_Click(object sender, EventArgs e)
+        {
+            Printers();
+        }
         private void miOpen_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Normal;
@@ -137,18 +166,11 @@ namespace AutoMailPrint
         }
         private void lblLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // Aktuelles Arbeitsverzeichnis ermitteln
-            string currentDirectory = Directory.GetCurrentDirectory();
-
-            // Pfad zur Log-Datei erstellen
-            string logFilePath = Path.Combine(currentDirectory, "AMPlog.log");
-
-            // Überprüfen, ob die Datei existiert
-            if (File.Exists(logFilePath))
+            if (File.Exists(_logFilePath))
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = logFilePath,
+                    FileName = _logFilePath,
                     UseShellExecute = true
                 });
             }
@@ -159,15 +181,11 @@ namespace AutoMailPrint
         }
         private void lblAttch_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // Aktuelles Arbeitsverzeichnis ermitteln
-            string currentDirectory = Directory.GetCurrentDirectory();
-            // Pfad zur erstellen
-            string logFilePath = Path.Combine(currentDirectory, "AMPattachments.log");
-            if (File.Exists(logFilePath))
+            if (File.Exists(_attachmentsLogPath))
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = logFilePath,
+                    FileName = _attachmentsLogPath,
                     UseShellExecute = true
                 });
             }
@@ -200,6 +218,14 @@ namespace AutoMailPrint
         }
         private void btnBMAC_Click(object sender, EventArgs e)
         {
+            payPalMe();
+        }
+        private void lblDonate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            payPalMe();
+        }
+        private void payPalMe()
+        {
             string url = "https://www.paypal.com/paypalme/tuefteltyp";
             Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
         }
@@ -225,6 +251,8 @@ namespace AutoMailPrint
             numKeepLog.Enabled = false;
             chkSendMail.Enabled = false;
             tbErrorAddress.Enabled = false;
+            btnPrinters.Enabled = false;
+            btnTestErrorMail.Enabled = false;
             SaveDataToFile();
         }
         private void InitializeTimer(int intervalMinutes)
@@ -252,11 +280,13 @@ namespace AutoMailPrint
             numInterval.Enabled = true;
             cbReader.Enabled = true;
             btnTestMail.Enabled = true;
-            btnTestMail.BackgroundImage = Properties.Resources.checkMailTest;
+            btnTestMail.BackgroundImage = Properties.Resources.checkMail;
             chkAutostart.Enabled = true;
             numKeepLog.Enabled = true;
             chkSendMail.Enabled = true;
             tbErrorAddress.Enabled = true;
+            btnPrinters.Enabled = true;
+            btnTestErrorMail.Enabled= true;
             StopTimer();
         }
         private void StopTimer()
@@ -290,58 +320,65 @@ namespace AutoMailPrint
         }
         private void TestPop3Connection(string server, int port, string username, string password, bool useSsl)
         {
-            using (var client = new System.Net.Mail.SmtpClient())
+            Task.Run(async () =>
             {
-                client.Host = server;
-                client.Port = port;
-                client.EnableSsl = useSsl;
-                client.Credentials = new NetworkCredential(username, password);
-                client.Timeout = 5000;
-                // Testverbindung durchführen
-                client.SendCompleted += (s, e) => {
-                    if (e.Error != null)
+                try
+                {
+                    using (var client = new Pop3Client())
                     {
-                        this.Invoke((MethodInvoker)delegate {
-                            btnTestMail.BackgroundImage = Properties.Resources.checkMailError;
-                            Log($"POP3-Connection failed: {e.Error.Message}");
-                        });
-                    }
-                    else
-                    {
+                        client.Timeout = 5000;
+                        await client.ConnectAsync(server, port, useSsl ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTlsWhenAvailable);
+                        await client.AuthenticateAsync(username, password);
+
                         this.Invoke((MethodInvoker)delegate {
                             btnTestMail.BackgroundImage = Properties.Resources.checkMailOk;
+                            btnTestMail.Enabled = true;
                             Log("POP3-Connection successfully established!");
                         });
+
+                        await client.DisconnectAsync(true);
                     }
-                };
-                // Leere Testmail senden
-                var msg = new MailMessage(username, username, "POP3 Test", "");
-                client.SendAsync(msg, null);
-            }
+                }
+                catch (Exception ex)
+                {
+                    this.Invoke((MethodInvoker)delegate {
+                        btnTestMail.BackgroundImage = Properties.Resources.checkMailError;
+                        btnTestMail.Enabled = true;
+                        Log($"POP3-Connection failed: {ex.Message}");
+                    });
+                }
+            });
         }
         private void TestImapConnection(string server, int port, string username, string password, bool useSsl)
         {
-            try
+            Task.Run(async () =>
             {
-                using (var client = new MailKit.Net.Imap.ImapClient())
+                try
                 {
-                    client.Connect(server, port, useSsl);
-                    client.Authenticate(username, password);
-
-                    if (client.IsConnected && client.IsAuthenticated)
+                    using (var client = new ImapClient())
                     {
-                        btnTestMail.BackgroundImage = Properties.Resources.checkMailOk;
-                        Log("IMAP-Connection successfully established!");
-                    }
+                        client.Timeout = 5000;
+                        await client.ConnectAsync(server, port, useSsl ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTlsWhenAvailable);
+                        await client.AuthenticateAsync(username, password);
 
-                    client.Disconnect(true);
+                        this.Invoke((MethodInvoker)delegate {
+                            btnTestMail.BackgroundImage = Properties.Resources.checkMailOk;
+                            btnTestMail.Enabled = true;
+                            Log("IMAP-Connection successfully established!");
+                        });
+
+                        await client.DisconnectAsync(true);
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                btnTestMail.BackgroundImage = Properties.Resources.checkMailError;
-                Log($"IMAP-Connection failed: {ex.Message}");
-            }
+                catch (Exception ex)
+                {
+                    this.Invoke((MethodInvoker)delegate {
+                        btnTestMail.BackgroundImage = Properties.Resources.checkMailError;
+                        btnTestMail.Enabled = true;
+                        Log($"IMAP-Connection failed: {ex.Message}");
+                    });
+                }
+            });
         }
         private void SaveDataToFile()
         {
@@ -364,7 +401,7 @@ namespace AutoMailPrint
                 };
 
                 var serializer = new XmlSerializer(typeof(AutoMailPrintSettings));
-                using (var writer = new StreamWriter("settings.xml"))
+                using (var writer = new StreamWriter(_settingsFilePath))
                 {
                     serializer.Serialize(writer, settings);
                 }
@@ -394,12 +431,12 @@ namespace AutoMailPrint
         }
         private void LoadSettingsFromFile()
         {
-            if (File.Exists("settings.xml"))
+            if (File.Exists(_settingsFilePath))
             {
                 try
                 {
                     var serializer = new XmlSerializer(typeof(AutoMailPrintSettings));
-                    using (var reader = new StreamReader("settings.xml"))
+                    using (var reader = new StreamReader(_settingsFilePath))
                     {
                         var settings = (AutoMailPrintSettings)serializer.Deserialize(reader);
                         // Felder mit den geladenen Daten aktualisieren
@@ -437,7 +474,9 @@ namespace AutoMailPrint
                         numKeepLog.Enabled = false;
                         chkSendMail.Enabled = false;
                         tbErrorAddress.Enabled = false;
-
+                        btnPrinters.Enabled = false;
+                        btnTestErrorMail.Enabled = false;
+                        Log("Settings loaded successfully");
                         InitializeTimer((int)numInterval.Value);
                         _isTimerRunning = true;
                         btnStartStop.BackgroundImage = Properties.Resources.btnStop;
@@ -467,7 +506,7 @@ namespace AutoMailPrint
                 string password = tbPassword.Text;
                 bool useSsl = chkSSL.Checked;
                 string protocol = cbProtocol.SelectedItem?.ToString();
-                string attachmentsFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "attachments");
+                string attachmentsFolder = _attachmentsDir;
 
                 if (!Directory.Exists(attachmentsFolder))
                 {
@@ -478,8 +517,30 @@ namespace AutoMailPrint
                 {
                     using (var client = new Pop3Client())
                     {
-                        client.Connect(server, port, useSsl);
-                        client.Authenticate(username, password);
+                        try
+                        {
+                            client.Connect(server, port, useSsl);
+                            client.Authenticate(username, password);
+                        }
+                        catch (SocketException ex)
+                        {
+                            SendMail("Connection to the mail server failed: " + ex.Message);
+                            Log(ex.Message);
+                            return;
+                        }
+                        catch (AuthenticationException ex)
+                        {
+                            SendMail("Authentication failed: " + ex.Message);
+                            Log(ex.Message);
+                            return;
+                        }
+                        catch (Exception ex)
+                        {
+                            SendMail("Unknown error: " + ex.Message);
+                            Log(ex.Message);
+                            return;
+                        }
+
                         // Anzahl der Nachrichten vor der Verarbeitung abrufen
                         int messageCount = client.Count;
 
@@ -509,8 +570,29 @@ namespace AutoMailPrint
                 {
                     using (var client = new ImapClient())
                     {
-                        client.Connect(server, port, useSsl);
-                        client.Authenticate(username, password);
+                        try
+                        {
+                            client.Connect(server, port, useSsl);
+                            client.Authenticate(username, password);
+                        }
+                        catch (SocketException ex)
+                        {
+                            SendMail("Connection to the mail server failed: " + ex.Message);
+                            Log(ex.Message);
+                            return;
+                        }
+                        catch (AuthenticationException ex)
+                        {
+                            SendMail("Authentication failed: " + ex.Message);
+                            Log(ex.Message);
+                            return;
+                        }
+                        catch (Exception ex)
+                        {
+                            SendMail("Unknown error: " + ex.Message);
+                            Log(ex.Message);
+                            return;
+                        }
 
                         var inbox = client.Inbox;
                         inbox.Open(FolderAccess.ReadWrite);
@@ -562,13 +644,11 @@ namespace AutoMailPrint
         }
         private void AddAttachmentFilenamesToListView(string attachmentsFolder)
         {
-            const string logFile = "AMPattachments.log";
-
             try
             {
                 if (Directory.Exists(attachmentsFolder))
                 {
-                    using (var logWriter = new StreamWriter(logFile, true))
+                    using (var logWriter = new StreamWriter(_attachmentsLogPath, true))
                     {
                         string[] files = Directory.GetFiles(attachmentsFolder);
 
@@ -600,13 +680,11 @@ namespace AutoMailPrint
         }
         private void LoadLogToListView()
         {
-            const string logFile = "AMPattachments.log";
-
-            if (!File.Exists(logFile)) return;
+            if (!File.Exists(_attachmentsLogPath)) return;
 
             try
             {
-                foreach (string line in File.ReadAllLines(logFile))
+                foreach (string line in File.ReadAllLines(_attachmentsLogPath))
                 {
                     string[] parts = line.Split('-');
                     if (parts.Length == 2)
@@ -622,6 +700,7 @@ namespace AutoMailPrint
                 Log($"Error loading the log: {ex.Message}");
             }
         }
+
         private void SavePdfAttachments(MimeMessage message, string attachmentsFolder)
         {
             foreach (var attachment in message.Attachments)
@@ -719,7 +798,7 @@ namespace AutoMailPrint
         {
             ProcessEmailAttachments();
             int daysToKeep = (int)numKeepLog.Value;
-            string[] logFiles = { "AMPattachments.log", "AMPlog.log" };
+            string[] logFiles = { _attachmentsLogPath, _logFilePath };
 
             foreach (string filePath in logFiles)
             {
@@ -892,19 +971,19 @@ namespace AutoMailPrint
                         Log($"{filePath} cleared (Next clean-up: {nextClearDate})");
 
                         // ListView leeren, basierend auf Dateipfad
-                        if (filePath == "AMPlog.log")
+                        if (filePath == _logFilePath)
                         {
                             lvLogs.Items.Clear();
                         }
-                        else if (filePath == "AMPattachments.log")
+                        else if (filePath == _attachmentsLogPath)
                         {
                             lvData.Items.Clear();
                         }
 
-                        // nächste Leerung neu berechnen
+                        // nächste Leerung berechnen
                         creationTime = nextClearDate; // Neuer Referenzzeitpunkt
                         nextClearDate = nextClearDate.AddDays(daysToKeep);
-                        _fileCreationTimes[filePath] = creationTime; // Dictionary aktualisieren
+                        _fileCreationTimes[filePath] = creationTime; // aktualisieren
                     }
                 }
             }
@@ -913,10 +992,10 @@ namespace AutoMailPrint
                 Log($"Error when clearing the log file {filePath}: {ex.Message}");
             }
         }
-
         private void chkSendMail_CheckedChanged(object sender, EventArgs e)
         {
             tbErrorAddress.Enabled = chkSendMail.Checked;
+            btnTestErrorMail.Enabled = chkSendMail.Checked;
         }
         private void SendMail(string body)
         {

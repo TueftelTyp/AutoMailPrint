@@ -42,21 +42,25 @@
             this.tbPassword = new System.Windows.Forms.TextBox();
             this.tbUser = new System.Windows.Forms.TextBox();
             this.tbMailServer = new System.Windows.Forms.TextBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.cbPrinters = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.numKeepLog = new System.Windows.Forms.NumericUpDown();
             this.numInterval = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.lvData = new System.Windows.Forms.ListView();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.chkAutostart = new System.Windows.Forms.CheckBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.cbReader = new System.Windows.Forms.ComboBox();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.cbDeleteMail = new System.Windows.Forms.CheckBox();
+            this.chkAutostart = new System.Windows.Forms.CheckBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.chkSendMail = new System.Windows.Forms.CheckBox();
+            this.tbErrorAddress = new System.Windows.Forms.TextBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cbPrinters = new System.Windows.Forms.ComboBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -70,30 +74,29 @@
             this.miExit = new System.Windows.Forms.ToolStripMenuItem();
             this.lblGit = new System.Windows.Forms.LinkLabel();
             this.lblTitle = new System.Windows.Forms.Label();
-            this.chkSendMail = new System.Windows.Forms.CheckBox();
-            this.tbErrorAddress = new System.Windows.Forms.TextBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.btnTestErrorMail = new System.Windows.Forms.Button();
+            this.lblDonate = new System.Windows.Forms.LinkLabel();
+            this.btnBMAC = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.imgIcon = new System.Windows.Forms.Button();
             this.btnMinimize = new System.Windows.Forms.Button();
-            this.btnBMAC = new System.Windows.Forms.Button();
+            this.btnTestErrorMail = new System.Windows.Forms.Button();
             this.btnStartStop = new System.Windows.Forms.Button();
+            this.btnPrinters = new System.Windows.Forms.Button();
             this.btnTestMail = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPort)).BeginInit();
-            this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numKeepLog)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numInterval)).BeginInit();
-            this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.MenuStrip1.SuspendLayout();
-            this.groupBox6.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -110,9 +113,9 @@
             this.groupBox1.Controls.Add(this.tbUser);
             this.groupBox1.Controls.Add(this.tbMailServer);
             this.groupBox1.Controls.Add(this.btnTestMail);
-            this.groupBox1.Location = new System.Drawing.Point(6, 24);
+            this.groupBox1.Location = new System.Drawing.Point(6, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(330, 155);
+            this.groupBox1.Size = new System.Drawing.Size(330, 140);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Email";
@@ -120,7 +123,7 @@
             // chkSSL
             // 
             this.chkSSL.AutoSize = true;
-            this.chkSSL.Location = new System.Drawing.Point(6, 126);
+            this.chkSSL.Location = new System.Drawing.Point(6, 113);
             this.chkSSL.Name = "chkSSL";
             this.chkSSL.Size = new System.Drawing.Size(71, 17);
             this.chkSSL.TabIndex = 6;
@@ -223,32 +226,13 @@
             this.tbMailServer.Size = new System.Drawing.Size(175, 20);
             this.tbMailServer.TabIndex = 1;
             // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.cbPrinters);
-            this.groupBox2.Location = new System.Drawing.Point(6, 185);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(330, 55);
-            this.groupBox2.TabIndex = 1;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Printer";
-            // 
-            // cbPrinters
-            // 
-            this.cbPrinters.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPrinters.FormattingEnabled = true;
-            this.cbPrinters.Location = new System.Drawing.Point(6, 19);
-            this.cbPrinters.Name = "cbPrinters";
-            this.cbPrinters.Size = new System.Drawing.Size(316, 21);
-            this.cbPrinters.TabIndex = 8;
-            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.numKeepLog);
             this.groupBox3.Controls.Add(this.numInterval);
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Controls.Add(this.label7);
-            this.groupBox3.Location = new System.Drawing.Point(364, 24);
+            this.groupBox3.Location = new System.Drawing.Point(366, 6);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(177, 83);
             this.groupBox3.TabIndex = 2;
@@ -267,7 +251,7 @@
             this.numKeepLog.Size = new System.Drawing.Size(37, 20);
             this.numKeepLog.TabIndex = 10;
             this.numKeepLog.Value = new decimal(new int[] {
-            15,
+            30,
             0,
             0,
             0});
@@ -297,11 +281,11 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 56);
+            this.label4.Location = new System.Drawing.Point(3, 56);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(149, 13);
+            this.label4.Size = new System.Drawing.Size(152, 13);
             this.label4.TabIndex = 7;
-            this.label4.Text = "Keep Logs for                  days";
+            this.label4.Text = "Keep Logs for                   days";
             // 
             // label7
             // 
@@ -315,45 +299,17 @@
             // lvData
             // 
             this.lvData.HideSelection = false;
-            this.lvData.Location = new System.Drawing.Point(-4, 0);
+            this.lvData.Location = new System.Drawing.Point(0, 0);
             this.lvData.Name = "lvData";
-            this.lvData.Size = new System.Drawing.Size(558, 332);
+            this.lvData.Size = new System.Drawing.Size(551, 318);
             this.lvData.TabIndex = 0;
             this.lvData.UseCompatibleStateImageBehavior = false;
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.groupBox6);
-            this.groupBox5.Controls.Add(this.btnBMAC);
-            this.groupBox5.Controls.Add(this.chkAutostart);
-            this.groupBox5.Controls.Add(this.btnStartStop);
-            this.groupBox5.Controls.Add(this.groupBox4);
-            this.groupBox5.Controls.Add(this.groupBox1);
-            this.groupBox5.Controls.Add(this.groupBox3);
-            this.groupBox5.Controls.Add(this.groupBox2);
-            this.groupBox5.Location = new System.Drawing.Point(0, 3);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(549, 329);
-            this.groupBox5.TabIndex = 6;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Settings";
-            // 
-            // chkAutostart
-            // 
-            this.chkAutostart.AutoSize = true;
-            this.chkAutostart.Location = new System.Drawing.Point(416, 206);
-            this.chkAutostart.Name = "chkAutostart";
-            this.chkAutostart.Size = new System.Drawing.Size(70, 17);
-            this.chkAutostart.TabIndex = 13;
-            this.chkAutostart.Text = " autostart";
-            this.chkAutostart.UseVisualStyleBackColor = true;
-            this.chkAutostart.CheckedChanged += new System.EventHandler(this.ChkAutostart_CheckedChanged);
             // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.radioButton1);
             this.groupBox4.Controls.Add(this.cbReader);
-            this.groupBox4.Location = new System.Drawing.Point(364, 113);
+            this.groupBox4.Location = new System.Drawing.Point(366, 95);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(177, 66);
             this.groupBox4.TabIndex = 10;
@@ -391,19 +347,110 @@
             this.tabControl2.Location = new System.Drawing.Point(0, 40);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(558, 358);
+            this.tabControl2.Size = new System.Drawing.Size(558, 344);
             this.tabControl2.TabIndex = 13;
             // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.groupBox5);
+            this.tabPage1.Controls.Add(this.groupBox6);
+            this.tabPage1.Controls.Add(this.btnStartStop);
+            this.tabPage1.Controls.Add(this.groupBox2);
+            this.tabPage1.Controls.Add(this.groupBox1);
+            this.tabPage1.Controls.Add(this.groupBox3);
+            this.tabPage1.Controls.Add(this.groupBox4);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(550, 332);
+            this.tabPage1.Size = new System.Drawing.Size(550, 318);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Control";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.cbDeleteMail);
+            this.groupBox5.Controls.Add(this.chkAutostart);
+            this.groupBox5.Location = new System.Drawing.Point(366, 167);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(177, 70);
+            this.groupBox5.TabIndex = 24;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Options";
+            // 
+            // cbDeleteMail
+            // 
+            this.cbDeleteMail.AutoSize = true;
+            this.cbDeleteMail.Checked = true;
+            this.cbDeleteMail.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbDeleteMail.Enabled = false;
+            this.cbDeleteMail.Location = new System.Drawing.Point(6, 19);
+            this.cbDeleteMail.Name = "cbDeleteMail";
+            this.cbDeleteMail.Size = new System.Drawing.Size(135, 17);
+            this.cbDeleteMail.TabIndex = 14;
+            this.cbDeleteMail.Text = "Delete processed mails";
+            this.cbDeleteMail.UseVisualStyleBackColor = true;
+            // 
+            // chkAutostart
+            // 
+            this.chkAutostart.AutoSize = true;
+            this.chkAutostart.Location = new System.Drawing.Point(6, 42);
+            this.chkAutostart.Name = "chkAutostart";
+            this.chkAutostart.Size = new System.Drawing.Size(86, 17);
+            this.chkAutostart.TabIndex = 21;
+            this.chkAutostart.Text = "Set autostart";
+            this.chkAutostart.UseVisualStyleBackColor = true;
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.btnTestErrorMail);
+            this.groupBox6.Controls.Add(this.chkSendMail);
+            this.groupBox6.Controls.Add(this.tbErrorAddress);
+            this.groupBox6.Location = new System.Drawing.Point(6, 213);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(330, 48);
+            this.groupBox6.TabIndex = 23;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Reports";
+            // 
+            // chkSendMail
+            // 
+            this.chkSendMail.AutoSize = true;
+            this.chkSendMail.Location = new System.Drawing.Point(6, 19);
+            this.chkSendMail.Name = "chkSendMail";
+            this.chkSendMail.Size = new System.Drawing.Size(113, 17);
+            this.chkSendMail.TabIndex = 16;
+            this.chkSendMail.Text = "Send error mails to";
+            this.chkSendMail.UseVisualStyleBackColor = true;
+            this.chkSendMail.Click += new System.EventHandler(this.chkSendMail_CheckedChanged);
+            // 
+            // tbErrorAddress
+            // 
+            this.tbErrorAddress.Enabled = false;
+            this.tbErrorAddress.Location = new System.Drawing.Point(119, 16);
+            this.tbErrorAddress.Name = "tbErrorAddress";
+            this.tbErrorAddress.Size = new System.Drawing.Size(178, 20);
+            this.tbErrorAddress.TabIndex = 17;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.btnPrinters);
+            this.groupBox2.Controls.Add(this.cbPrinters);
+            this.groupBox2.Location = new System.Drawing.Point(6, 152);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(330, 55);
+            this.groupBox2.TabIndex = 19;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Printer";
+            // 
+            // cbPrinters
+            // 
+            this.cbPrinters.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPrinters.FormattingEnabled = true;
+            this.cbPrinters.Location = new System.Drawing.Point(6, 19);
+            this.cbPrinters.Name = "cbPrinters";
+            this.cbPrinters.Size = new System.Drawing.Size(278, 21);
+            this.cbPrinters.TabIndex = 8;
             // 
             // tabPage2
             // 
@@ -412,7 +459,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(550, 332);
+            this.tabPage2.Size = new System.Drawing.Size(550, 318);
             this.tabPage2.TabIndex = 2;
             this.tabPage2.Text = "Files";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -435,7 +482,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(550, 332);
+            this.tabPage3.Size = new System.Drawing.Size(550, 318);
             this.tabPage3.TabIndex = 3;
             this.tabPage3.Text = "Log";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -454,10 +501,10 @@
             // lvLogs
             // 
             this.lvLogs.HideSelection = false;
-            this.lvLogs.Location = new System.Drawing.Point(-4, 0);
+            this.lvLogs.Location = new System.Drawing.Point(0, 0);
             this.lvLogs.MultiSelect = false;
             this.lvLogs.Name = "lvLogs";
-            this.lvLogs.Size = new System.Drawing.Size(558, 332);
+            this.lvLogs.Size = new System.Drawing.Size(551, 318);
             this.lvLogs.TabIndex = 0;
             this.lvLogs.UseCompatibleStateImageBehavior = false;
             // 
@@ -509,7 +556,7 @@
             this.lblGit.AutoSize = true;
             this.lblGit.Font = new System.Drawing.Font("Consolas", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblGit.LinkColor = System.Drawing.Color.Black;
-            this.lblGit.Location = new System.Drawing.Point(526, 49);
+            this.lblGit.Location = new System.Drawing.Point(496, 49);
             this.lblGit.Name = "lblGit";
             this.lblGit.Size = new System.Drawing.Size(29, 9);
             this.lblGit.TabIndex = 14;
@@ -527,50 +574,33 @@
             this.lblTitle.TabIndex = 11;
             this.lblTitle.Text = "AutoMailPrint";
             // 
-            // chkSendMail
+            // lblDonate
             // 
-            this.chkSendMail.AutoSize = true;
-            this.chkSendMail.Location = new System.Drawing.Point(6, 19);
-            this.chkSendMail.Name = "chkSendMail";
-            this.chkSendMail.Size = new System.Drawing.Size(137, 17);
-            this.chkSendMail.TabIndex = 16;
-            this.chkSendMail.Text = "Send error messages to";
-            this.chkSendMail.UseVisualStyleBackColor = true;
-            this.chkSendMail.CheckedChanged += new System.EventHandler(this.chkSendMail_CheckedChanged);
+            this.lblDonate.AutoSize = true;
+            this.lblDonate.Font = new System.Drawing.Font("Consolas", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDonate.LinkColor = System.Drawing.Color.Black;
+            this.lblDonate.Location = new System.Drawing.Point(526, 49);
+            this.lblDonate.Name = "lblDonate";
+            this.lblDonate.Size = new System.Drawing.Size(29, 9);
+            this.lblDonate.TabIndex = 23;
+            this.lblDonate.TabStop = true;
+            this.lblDonate.Text = "Donate";
+            this.lblDonate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblDonate_LinkClicked);
             // 
-            // tbErrorAddress
+            // btnBMAC
             // 
-            this.tbErrorAddress.Enabled = false;
-            this.tbErrorAddress.Location = new System.Drawing.Point(143, 17);
-            this.tbErrorAddress.Name = "tbErrorAddress";
-            this.tbErrorAddress.Size = new System.Drawing.Size(179, 20);
-            this.tbErrorAddress.TabIndex = 17;
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.Controls.Add(this.btnTestErrorMail);
-            this.groupBox6.Controls.Add(this.chkSendMail);
-            this.groupBox6.Controls.Add(this.tbErrorAddress);
-            this.groupBox6.Location = new System.Drawing.Point(6, 246);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(330, 73);
-            this.groupBox6.TabIndex = 18;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Reports";
-            // 
-            // btnTestErrorMail
-            // 
-            this.btnTestErrorMail.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnTestErrorMail.FlatAppearance.BorderSize = 0;
-            this.btnTestErrorMail.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTestErrorMail.Font = new System.Drawing.Font("Microsoft Tai Le", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTestErrorMail.Location = new System.Drawing.Point(270, 43);
-            this.btnTestErrorMail.Name = "btnTestErrorMail";
-            this.btnTestErrorMail.Size = new System.Drawing.Size(52, 28);
-            this.btnTestErrorMail.TabIndex = 19;
-            this.btnTestErrorMail.Text = "Send test";
-            this.btnTestErrorMail.UseVisualStyleBackColor = true;
-            this.btnTestErrorMail.Click += new System.EventHandler(this.btnTestErrorMail_Click);
+            this.btnBMAC.BackgroundImage = global::AutoMailPrint.Properties.Resources.bmac;
+            this.btnBMAC.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnBMAC.FlatAppearance.BorderSize = 0;
+            this.btnBMAC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBMAC.Font = new System.Drawing.Font("Lucida Sans", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBMAC.Location = new System.Drawing.Point(468, 4);
+            this.btnBMAC.Name = "btnBMAC";
+            this.btnBMAC.Size = new System.Drawing.Size(23, 24);
+            this.btnBMAC.TabIndex = 22;
+            this.btnBMAC.UseVisualStyleBackColor = true;
+            this.btnBMAC.Visible = false;
+            this.btnBMAC.Click += new System.EventHandler(this.btnBMAC_Click);
             // 
             // btnClose
             // 
@@ -613,18 +643,19 @@
             this.btnMinimize.UseVisualStyleBackColor = true;
             this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
             // 
-            // btnBMAC
+            // btnTestErrorMail
             // 
-            this.btnBMAC.BackgroundImage = global::AutoMailPrint.Properties.Resources.bmac;
-            this.btnBMAC.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnBMAC.FlatAppearance.BorderSize = 0;
-            this.btnBMAC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBMAC.Location = new System.Drawing.Point(524, 302);
-            this.btnBMAC.Name = "btnBMAC";
-            this.btnBMAC.Size = new System.Drawing.Size(23, 24);
-            this.btnBMAC.TabIndex = 15;
-            this.btnBMAC.UseVisualStyleBackColor = true;
-            this.btnBMAC.Click += new System.EventHandler(this.btnBMAC_Click);
+            this.btnTestErrorMail.BackgroundImage = global::AutoMailPrint.Properties.Resources.sendMail;
+            this.btnTestErrorMail.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnTestErrorMail.FlatAppearance.BorderSize = 0;
+            this.btnTestErrorMail.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTestErrorMail.Font = new System.Drawing.Font("Microsoft Tai Le", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTestErrorMail.Location = new System.Drawing.Point(304, 17);
+            this.btnTestErrorMail.Name = "btnTestErrorMail";
+            this.btnTestErrorMail.Size = new System.Drawing.Size(15, 20);
+            this.btnTestErrorMail.TabIndex = 19;
+            this.btnTestErrorMail.UseVisualStyleBackColor = true;
+            this.btnTestErrorMail.Click += new System.EventHandler(this.btnTestErrorMail_Click);
             // 
             // btnStartStop
             // 
@@ -632,23 +663,37 @@
             this.btnStartStop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnStartStop.FlatAppearance.BorderSize = 0;
             this.btnStartStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStartStop.Location = new System.Drawing.Point(407, 229);
+            this.btnStartStop.Location = new System.Drawing.Point(409, 248);
             this.btnStartStop.Name = "btnStartStop";
             this.btnStartStop.Size = new System.Drawing.Size(88, 53);
-            this.btnStartStop.TabIndex = 12;
+            this.btnStartStop.TabIndex = 20;
             this.btnStartStop.UseVisualStyleBackColor = true;
             this.btnStartStop.Click += new System.EventHandler(this.btnStartStop_Click);
+            // 
+            // btnPrinters
+            // 
+            this.btnPrinters.BackColor = System.Drawing.Color.Transparent;
+            this.btnPrinters.BackgroundImage = global::AutoMailPrint.Properties.Resources.btnPrinters;
+            this.btnPrinters.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnPrinters.FlatAppearance.BorderSize = 0;
+            this.btnPrinters.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrinters.Location = new System.Drawing.Point(300, 19);
+            this.btnPrinters.Name = "btnPrinters";
+            this.btnPrinters.Size = new System.Drawing.Size(21, 21);
+            this.btnPrinters.TabIndex = 14;
+            this.btnPrinters.UseVisualStyleBackColor = false;
+            this.btnPrinters.Click += new System.EventHandler(this.btnPrinters_Click);
             // 
             // btnTestMail
             // 
             this.btnTestMail.BackColor = System.Drawing.Color.Transparent;
-            this.btnTestMail.BackgroundImage = global::AutoMailPrint.Properties.Resources.checkMailTest;
+            this.btnTestMail.BackgroundImage = global::AutoMailPrint.Properties.Resources.checkMail;
             this.btnTestMail.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnTestMail.FlatAppearance.BorderSize = 0;
             this.btnTestMail.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTestMail.Location = new System.Drawing.Point(293, 122);
+            this.btnTestMail.Location = new System.Drawing.Point(303, 113);
             this.btnTestMail.Name = "btnTestMail";
-            this.btnTestMail.Size = new System.Drawing.Size(27, 27);
+            this.btnTestMail.Size = new System.Drawing.Size(18, 18);
             this.btnTestMail.TabIndex = 7;
             this.btnTestMail.UseVisualStyleBackColor = false;
             this.btnTestMail.Click += new System.EventHandler(this.btnTestMail_Click);
@@ -657,8 +702,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(559, 396);
+            this.ClientSize = new System.Drawing.Size(558, 384);
+            this.Controls.Add(this.lblDonate);
             this.Controls.Add(this.lblGit);
+            this.Controls.Add(this.btnBMAC);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.imgIcon);
@@ -676,24 +723,24 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPort)).EndInit();
-            this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numKeepLog)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numInterval)).EndInit();
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.tabControl2.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.MenuStrip1.ResumeLayout(false);
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -707,7 +754,6 @@
         private System.Windows.Forms.TextBox tbUser;
         private System.Windows.Forms.TextBox tbMailServer;
         private System.Windows.Forms.Button btnTestMail;
-        private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label3;
@@ -715,13 +761,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ComboBox cbPrinters;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.NumericUpDown numInterval;
         private System.Windows.Forms.CheckBox chkSSL;
         private System.Windows.Forms.ListView lvData;
-        private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.Button btnStartStop;
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
@@ -743,14 +786,21 @@
         private System.Windows.Forms.Button imgIcon;
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Button btnClose;
-        private System.Windows.Forms.CheckBox chkAutostart;
         private System.Windows.Forms.NumericUpDown numKeepLog;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button btnBMAC;
-        private System.Windows.Forms.TextBox tbErrorAddress;
-        private System.Windows.Forms.CheckBox chkSendMail;
+        private System.Windows.Forms.CheckBox cbDeleteMail;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Button btnTestErrorMail;
+        private System.Windows.Forms.CheckBox chkSendMail;
+        private System.Windows.Forms.TextBox tbErrorAddress;
+        private System.Windows.Forms.Button btnBMAC;
+        private System.Windows.Forms.CheckBox chkAutostart;
+        private System.Windows.Forms.Button btnStartStop;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button btnPrinters;
+        private System.Windows.Forms.ComboBox cbPrinters;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.LinkLabel lblDonate;
     }
 }
 

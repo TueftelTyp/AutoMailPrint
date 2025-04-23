@@ -83,6 +83,16 @@ namespace AutoMailPrint.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap btnPrinters {
+            get {
+                object obj = ResourceManager.GetObject("btnPrinters", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap btnStart {
             get {
                 object obj = ResourceManager.GetObject("btnStart", resourceCulture);
@@ -96,6 +106,16 @@ namespace AutoMailPrint.Properties {
         internal static System.Drawing.Bitmap btnStop {
             get {
                 object obj = ResourceManager.GetObject("btnStop", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap checkMail {
+            get {
+                object obj = ResourceManager.GetObject("checkMail", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -146,6 +166,16 @@ namespace AutoMailPrint.Properties {
         internal static System.Drawing.Bitmap ctlMini {
             get {
                 object obj = ResourceManager.GetObject("ctlMini", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap sendMail {
+            get {
+                object obj = ResourceManager.GetObject("sendMail", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
