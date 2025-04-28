@@ -42,6 +42,7 @@
             this.tbPassword = new System.Windows.Forms.TextBox();
             this.tbUser = new System.Windows.Forms.TextBox();
             this.tbMailServer = new System.Windows.Forms.TextBox();
+            this.btnTestMail = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.numKeepLog = new System.Windows.Forms.NumericUpDown();
             this.numInterval = new System.Windows.Forms.NumericUpDown();
@@ -49,7 +50,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.lvData = new System.Windows.Forms.ListView();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.cbReader = new System.Windows.Forms.ComboBox();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -57,9 +57,12 @@
             this.cbDeleteMail = new System.Windows.Forms.CheckBox();
             this.chkAutostart = new System.Windows.Forms.CheckBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.btnTestErrorMail = new System.Windows.Forms.Button();
             this.chkSendMail = new System.Windows.Forms.CheckBox();
             this.tbErrorAddress = new System.Windows.Forms.TextBox();
+            this.btnStartStop = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnPrinters = new System.Windows.Forms.Button();
             this.cbPrinters = new System.Windows.Forms.ComboBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
@@ -79,10 +82,10 @@
             this.btnClose = new System.Windows.Forms.Button();
             this.imgIcon = new System.Windows.Forms.Button();
             this.btnMinimize = new System.Windows.Forms.Button();
-            this.btnTestErrorMail = new System.Windows.Forms.Button();
-            this.btnStartStop = new System.Windows.Forms.Button();
-            this.btnPrinters = new System.Windows.Forms.Button();
-            this.btnTestMail = new System.Windows.Forms.Button();
+            this.numPrintTimeout = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
+            this.btnReloadReader = new System.Windows.Forms.Button();
+            this.cbDefaultReader = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPort)).BeginInit();
             this.groupBox3.SuspendLayout();
@@ -97,6 +100,7 @@
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.MenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numPrintTimeout)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -226,30 +230,52 @@
             this.tbMailServer.Size = new System.Drawing.Size(175, 20);
             this.tbMailServer.TabIndex = 1;
             // 
+            // btnTestMail
+            // 
+            this.btnTestMail.BackColor = System.Drawing.Color.Transparent;
+            this.btnTestMail.BackgroundImage = global::AutoMailPrint.Properties.Resources.checkMail;
+            this.btnTestMail.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnTestMail.FlatAppearance.BorderSize = 0;
+            this.btnTestMail.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTestMail.Location = new System.Drawing.Point(303, 113);
+            this.btnTestMail.Name = "btnTestMail";
+            this.btnTestMail.Size = new System.Drawing.Size(18, 18);
+            this.btnTestMail.TabIndex = 7;
+            this.btnTestMail.UseVisualStyleBackColor = false;
+            this.btnTestMail.Click += new System.EventHandler(this.btnTestMail_Click);
+            // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.numPrintTimeout);
+            this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.numKeepLog);
             this.groupBox3.Controls.Add(this.numInterval);
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Controls.Add(this.label7);
             this.groupBox3.Location = new System.Drawing.Point(366, 6);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(177, 83);
+            this.groupBox3.Size = new System.Drawing.Size(177, 92);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Interval";
             // 
             // numKeepLog
             // 
-            this.numKeepLog.Location = new System.Drawing.Point(84, 54);
+            this.numKeepLog.Location = new System.Drawing.Point(81, 45);
+            this.numKeepLog.Maximum = new decimal(new int[] {
+            365,
+            0,
+            0,
+            0});
             this.numKeepLog.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.numKeepLog.Name = "numKeepLog";
-            this.numKeepLog.Size = new System.Drawing.Size(37, 20);
-            this.numKeepLog.TabIndex = 10;
+            this.numKeepLog.ReadOnly = true;
+            this.numKeepLog.Size = new System.Drawing.Size(44, 20);
+            this.numKeepLog.TabIndex = 14;
             this.numKeepLog.Value = new decimal(new int[] {
             30,
             0,
@@ -258,7 +284,7 @@
             // 
             // numInterval
             // 
-            this.numInterval.Location = new System.Drawing.Point(73, 24);
+            this.numInterval.Location = new System.Drawing.Point(81, 24);
             this.numInterval.Maximum = new decimal(new int[] {
             1440,
             0,
@@ -270,8 +296,9 @@
             0,
             0});
             this.numInterval.Name = "numInterval";
-            this.numInterval.Size = new System.Drawing.Size(48, 20);
-            this.numInterval.TabIndex = 9;
+            this.numInterval.ReadOnly = true;
+            this.numInterval.Size = new System.Drawing.Size(44, 20);
+            this.numInterval.TabIndex = 13;
             this.numInterval.Value = new decimal(new int[] {
             1,
             0,
@@ -281,7 +308,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 56);
+            this.label4.Location = new System.Drawing.Point(3, 47);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(152, 13);
             this.label4.TabIndex = 7;
@@ -307,37 +334,25 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.radioButton1);
+            this.groupBox4.Controls.Add(this.cbDefaultReader);
+            this.groupBox4.Controls.Add(this.btnReloadReader);
             this.groupBox4.Controls.Add(this.cbReader);
-            this.groupBox4.Location = new System.Drawing.Point(366, 95);
+            this.groupBox4.Location = new System.Drawing.Point(366, 104);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(177, 66);
             this.groupBox4.TabIndex = 10;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Interface";
             // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.BackColor = System.Drawing.Color.Transparent;
-            this.radioButton1.Checked = true;
-            this.radioButton1.Enabled = false;
-            this.radioButton1.Location = new System.Drawing.Point(6, 19);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(143, 17);
-            this.radioButton1.TabIndex = 11;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "use standard PDF reader";
-            this.radioButton1.UseVisualStyleBackColor = false;
-            // 
             // cbReader
             // 
+            this.cbReader.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbReader.Enabled = false;
             this.cbReader.FormattingEnabled = true;
             this.cbReader.Location = new System.Drawing.Point(6, 39);
             this.cbReader.Name = "cbReader";
-            this.cbReader.Size = new System.Drawing.Size(165, 21);
-            this.cbReader.TabIndex = 9;
-            this.cbReader.Visible = false;
+            this.cbReader.Size = new System.Drawing.Size(138, 21);
+            this.cbReader.TabIndex = 17;
             // 
             // tabControl2
             // 
@@ -371,7 +386,7 @@
             // 
             this.groupBox5.Controls.Add(this.cbDeleteMail);
             this.groupBox5.Controls.Add(this.chkAutostart);
-            this.groupBox5.Location = new System.Drawing.Point(366, 167);
+            this.groupBox5.Location = new System.Drawing.Point(366, 176);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(177, 70);
             this.groupBox5.TabIndex = 24;
@@ -387,7 +402,7 @@
             this.cbDeleteMail.Location = new System.Drawing.Point(6, 19);
             this.cbDeleteMail.Name = "cbDeleteMail";
             this.cbDeleteMail.Size = new System.Drawing.Size(135, 17);
-            this.cbDeleteMail.TabIndex = 14;
+            this.cbDeleteMail.TabIndex = 19;
             this.cbDeleteMail.Text = "Delete processed mails";
             this.cbDeleteMail.UseVisualStyleBackColor = true;
             // 
@@ -397,7 +412,7 @@
             this.chkAutostart.Location = new System.Drawing.Point(6, 42);
             this.chkAutostart.Name = "chkAutostart";
             this.chkAutostart.Size = new System.Drawing.Size(86, 17);
-            this.chkAutostart.TabIndex = 21;
+            this.chkAutostart.TabIndex = 20;
             this.chkAutostart.Text = "Set autostart";
             this.chkAutostart.UseVisualStyleBackColor = true;
             // 
@@ -413,13 +428,27 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Reports";
             // 
+            // btnTestErrorMail
+            // 
+            this.btnTestErrorMail.BackgroundImage = global::AutoMailPrint.Properties.Resources.sendMail;
+            this.btnTestErrorMail.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnTestErrorMail.FlatAppearance.BorderSize = 0;
+            this.btnTestErrorMail.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTestErrorMail.Font = new System.Drawing.Font("Microsoft Tai Le", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTestErrorMail.Location = new System.Drawing.Point(304, 17);
+            this.btnTestErrorMail.Name = "btnTestErrorMail";
+            this.btnTestErrorMail.Size = new System.Drawing.Size(15, 20);
+            this.btnTestErrorMail.TabIndex = 12;
+            this.btnTestErrorMail.UseVisualStyleBackColor = true;
+            this.btnTestErrorMail.Click += new System.EventHandler(this.btnTestErrorMail_Click);
+            // 
             // chkSendMail
             // 
             this.chkSendMail.AutoSize = true;
             this.chkSendMail.Location = new System.Drawing.Point(6, 19);
             this.chkSendMail.Name = "chkSendMail";
             this.chkSendMail.Size = new System.Drawing.Size(113, 17);
-            this.chkSendMail.TabIndex = 16;
+            this.chkSendMail.TabIndex = 10;
             this.chkSendMail.Text = "Send error mails to";
             this.chkSendMail.UseVisualStyleBackColor = true;
             this.chkSendMail.Click += new System.EventHandler(this.chkSendMail_CheckedChanged);
@@ -430,7 +459,20 @@
             this.tbErrorAddress.Location = new System.Drawing.Point(119, 16);
             this.tbErrorAddress.Name = "tbErrorAddress";
             this.tbErrorAddress.Size = new System.Drawing.Size(178, 20);
-            this.tbErrorAddress.TabIndex = 17;
+            this.tbErrorAddress.TabIndex = 11;
+            // 
+            // btnStartStop
+            // 
+            this.btnStartStop.BackgroundImage = global::AutoMailPrint.Properties.Resources.btnStart;
+            this.btnStartStop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnStartStop.FlatAppearance.BorderSize = 0;
+            this.btnStartStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStartStop.Location = new System.Drawing.Point(410, 257);
+            this.btnStartStop.Name = "btnStartStop";
+            this.btnStartStop.Size = new System.Drawing.Size(88, 53);
+            this.btnStartStop.TabIndex = 21;
+            this.btnStartStop.UseVisualStyleBackColor = true;
+            this.btnStartStop.Click += new System.EventHandler(this.btnStartStop_Click);
             // 
             // groupBox2
             // 
@@ -442,6 +484,20 @@
             this.groupBox2.TabIndex = 19;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Printer";
+            // 
+            // btnPrinters
+            // 
+            this.btnPrinters.BackColor = System.Drawing.Color.Transparent;
+            this.btnPrinters.BackgroundImage = global::AutoMailPrint.Properties.Resources.btnPrinters;
+            this.btnPrinters.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnPrinters.FlatAppearance.BorderSize = 0;
+            this.btnPrinters.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPrinters.Location = new System.Drawing.Point(300, 19);
+            this.btnPrinters.Name = "btnPrinters";
+            this.btnPrinters.Size = new System.Drawing.Size(21, 21);
+            this.btnPrinters.TabIndex = 9;
+            this.btnPrinters.UseVisualStyleBackColor = false;
+            this.btnPrinters.Click += new System.EventHandler(this.btnPrinters_Click);
             // 
             // cbPrinters
             // 
@@ -559,7 +615,7 @@
             this.lblGit.Location = new System.Drawing.Point(496, 49);
             this.lblGit.Name = "lblGit";
             this.lblGit.Size = new System.Drawing.Size(29, 9);
-            this.lblGit.TabIndex = 14;
+            this.lblGit.TabIndex = 22;
             this.lblGit.TabStop = true;
             this.lblGit.Text = "GitHub";
             this.lblGit.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblGit_LinkClicked);
@@ -594,10 +650,11 @@
             this.btnBMAC.FlatAppearance.BorderSize = 0;
             this.btnBMAC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBMAC.Font = new System.Drawing.Font("Lucida Sans", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBMAC.Location = new System.Drawing.Point(468, 4);
+            this.btnBMAC.Location = new System.Drawing.Point(414, 4);
             this.btnBMAC.Name = "btnBMAC";
-            this.btnBMAC.Size = new System.Drawing.Size(23, 24);
+            this.btnBMAC.Size = new System.Drawing.Size(77, 24);
             this.btnBMAC.TabIndex = 22;
+            this.btnBMAC.Text = "DISABLED";
             this.btnBMAC.UseVisualStyleBackColor = true;
             this.btnBMAC.Visible = false;
             this.btnBMAC.Click += new System.EventHandler(this.btnBMAC_Click);
@@ -625,7 +682,7 @@
             this.imgIcon.Location = new System.Drawing.Point(4, 5);
             this.imgIcon.Name = "imgIcon";
             this.imgIcon.Size = new System.Drawing.Size(38, 28);
-            this.imgIcon.TabIndex = 16;
+            this.imgIcon.TabIndex = 0;
             this.imgIcon.TabStop = false;
             this.imgIcon.UseVisualStyleBackColor = true;
             this.imgIcon.Click += new System.EventHandler(this.imgIcon_Click);
@@ -640,63 +697,68 @@
             this.btnMinimize.Name = "btnMinimize";
             this.btnMinimize.Size = new System.Drawing.Size(21, 21);
             this.btnMinimize.TabIndex = 15;
+            this.btnMinimize.TabStop = false;
             this.btnMinimize.UseVisualStyleBackColor = true;
             this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
             // 
-            // btnTestErrorMail
+            // numPrintTimeout
             // 
-            this.btnTestErrorMail.BackgroundImage = global::AutoMailPrint.Properties.Resources.sendMail;
-            this.btnTestErrorMail.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnTestErrorMail.FlatAppearance.BorderSize = 0;
-            this.btnTestErrorMail.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTestErrorMail.Font = new System.Drawing.Font("Microsoft Tai Le", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTestErrorMail.Location = new System.Drawing.Point(304, 17);
-            this.btnTestErrorMail.Name = "btnTestErrorMail";
-            this.btnTestErrorMail.Size = new System.Drawing.Size(15, 20);
-            this.btnTestErrorMail.TabIndex = 19;
-            this.btnTestErrorMail.UseVisualStyleBackColor = true;
-            this.btnTestErrorMail.Click += new System.EventHandler(this.btnTestErrorMail_Click);
+            this.numPrintTimeout.Location = new System.Drawing.Point(88, 66);
+            this.numPrintTimeout.Maximum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            0});
+            this.numPrintTimeout.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numPrintTimeout.Name = "numPrintTimeout";
+            this.numPrintTimeout.ReadOnly = true;
+            this.numPrintTimeout.Size = new System.Drawing.Size(37, 20);
+            this.numPrintTimeout.TabIndex = 15;
+            this.numPrintTimeout.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
             // 
-            // btnStartStop
+            // label8
             // 
-            this.btnStartStop.BackgroundImage = global::AutoMailPrint.Properties.Resources.btnStart;
-            this.btnStartStop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnStartStop.FlatAppearance.BorderSize = 0;
-            this.btnStartStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStartStop.Location = new System.Drawing.Point(409, 248);
-            this.btnStartStop.Name = "btnStartStop";
-            this.btnStartStop.Size = new System.Drawing.Size(88, 53);
-            this.btnStartStop.TabIndex = 20;
-            this.btnStartStop.UseVisualStyleBackColor = true;
-            this.btnStartStop.Click += new System.EventHandler(this.btnStartStop_Click);
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(2, 68);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(171, 13);
+            this.label8.TabIndex = 11;
+            this.label8.Text = "Print queue time:               seconds";
             // 
-            // btnPrinters
+            // btnReloadReader
             // 
-            this.btnPrinters.BackColor = System.Drawing.Color.Transparent;
-            this.btnPrinters.BackgroundImage = global::AutoMailPrint.Properties.Resources.btnPrinters;
-            this.btnPrinters.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnPrinters.FlatAppearance.BorderSize = 0;
-            this.btnPrinters.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPrinters.Location = new System.Drawing.Point(300, 19);
-            this.btnPrinters.Name = "btnPrinters";
-            this.btnPrinters.Size = new System.Drawing.Size(21, 21);
-            this.btnPrinters.TabIndex = 14;
-            this.btnPrinters.UseVisualStyleBackColor = false;
-            this.btnPrinters.Click += new System.EventHandler(this.btnPrinters_Click);
+            this.btnReloadReader.BackColor = System.Drawing.Color.Transparent;
+            this.btnReloadReader.BackgroundImage = global::AutoMailPrint.Properties.Resources.btnPrinters;
+            this.btnReloadReader.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnReloadReader.FlatAppearance.BorderSize = 0;
+            this.btnReloadReader.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReloadReader.Location = new System.Drawing.Point(150, 38);
+            this.btnReloadReader.Name = "btnReloadReader";
+            this.btnReloadReader.Size = new System.Drawing.Size(21, 21);
+            this.btnReloadReader.TabIndex = 18;
+            this.btnReloadReader.UseVisualStyleBackColor = false;
+            this.btnReloadReader.Click += new System.EventHandler(this.btnReloadReader_Click);
             // 
-            // btnTestMail
+            // cbDefaultReader
             // 
-            this.btnTestMail.BackColor = System.Drawing.Color.Transparent;
-            this.btnTestMail.BackgroundImage = global::AutoMailPrint.Properties.Resources.checkMail;
-            this.btnTestMail.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnTestMail.FlatAppearance.BorderSize = 0;
-            this.btnTestMail.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTestMail.Location = new System.Drawing.Point(303, 113);
-            this.btnTestMail.Name = "btnTestMail";
-            this.btnTestMail.Size = new System.Drawing.Size(18, 18);
-            this.btnTestMail.TabIndex = 7;
-            this.btnTestMail.UseVisualStyleBackColor = false;
-            this.btnTestMail.Click += new System.EventHandler(this.btnTestMail_Click);
+            this.cbDefaultReader.AutoSize = true;
+            this.cbDefaultReader.Checked = true;
+            this.cbDefaultReader.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbDefaultReader.Location = new System.Drawing.Point(6, 19);
+            this.cbDefaultReader.Name = "cbDefaultReader";
+            this.cbDefaultReader.Size = new System.Drawing.Size(144, 17);
+            this.cbDefaultReader.TabIndex = 16;
+            this.cbDefaultReader.Text = "use standard PDF reader";
+            this.cbDefaultReader.UseVisualStyleBackColor = true;
+            this.cbDefaultReader.CheckedChanged += new System.EventHandler(this.cbDefaultReader_CheckedChanged);
             // 
             // Form1
             // 
@@ -741,6 +803,7 @@
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.MenuStrip1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numPrintTimeout)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -774,7 +837,6 @@
         private System.Windows.Forms.NotifyIcon notify;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.ComboBox cbReader;
-        private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.ContextMenuStrip MenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem miStartStop;
         private System.Windows.Forms.ToolStripMenuItem miOpen;
@@ -801,6 +863,10 @@
         private System.Windows.Forms.ComboBox cbPrinters;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.LinkLabel lblDonate;
+        private System.Windows.Forms.NumericUpDown numPrintTimeout;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button btnReloadReader;
+        private System.Windows.Forms.CheckBox cbDefaultReader;
     }
 }
 

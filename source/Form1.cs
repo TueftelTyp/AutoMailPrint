@@ -17,6 +17,8 @@ using System.Drawing.Printing;
 using MailKit.Security;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using System.Text.RegularExpressions;
+using System.Windows.Interop;
 
 namespace AutoMailPrint
 {
@@ -60,6 +62,7 @@ namespace AutoMailPrint
             LoadLogFile();
             InitializeListViewColumns();
             LoadLogToListView();
+            LoadPdfReadersToComboBox();
             cbProtocol.SelectedIndex = 0;
         }
         private void Form1_MouseDown(object sender, MouseEventArgs e)
@@ -224,6 +227,10 @@ namespace AutoMailPrint
         {
             payPalMe();
         }
+        private void btnReloadReader_Click(object sender, EventArgs e)
+        {
+            LoadPdfReadersToComboBox();
+        }
         private void payPalMe()
         {
             string url = "https://www.paypal.com/paypalme/tuefteltyp";
@@ -245,6 +252,7 @@ namespace AutoMailPrint
             cbPrinters.Enabled = false;
             numInterval.Enabled = false;
             cbReader.Enabled = false;
+            cbDefaultReader.Enabled = false;
             btnTestMail.Enabled = false;
             btnTestMail.BackgroundImage = Properties.Resources.checkMailTest;
             chkAutostart.Enabled = false;
@@ -253,6 +261,8 @@ namespace AutoMailPrint
             tbErrorAddress.Enabled = false;
             btnPrinters.Enabled = false;
             btnTestErrorMail.Enabled = false;
+            numPrintTimeout.Enabled = false;
+            btnReloadReader.Enabled = false;
             SaveDataToFile();
         }
         private void InitializeTimer(int intervalMinutes)
@@ -279,6 +289,7 @@ namespace AutoMailPrint
             cbPrinters.Enabled = true;
             numInterval.Enabled = true;
             cbReader.Enabled = true;
+            cbDefaultReader.Enabled = true;
             btnTestMail.Enabled = true;
             btnTestMail.BackgroundImage = Properties.Resources.checkMail;
             chkAutostart.Enabled = true;
@@ -287,6 +298,8 @@ namespace AutoMailPrint
             tbErrorAddress.Enabled = true;
             btnPrinters.Enabled = true;
             btnTestErrorMail.Enabled= true;
+            numPrintTimeout.Enabled = true;
+            btnReloadReader.Enabled = true;
             StopTimer();
         }
         private void StopTimer()
@@ -397,7 +410,9 @@ namespace AutoMailPrint
                     SelectedReader = cbReader.SelectedItem?.ToString(),
                     DaysToKeepLogs = (int)numKeepLog.Value,
                     SendMail = chkSendMail.Checked,
-                    ErrorAddress = tbErrorAddress.Text
+                    ErrorAddress = tbErrorAddress.Text,
+                    PrintTimeoutSeconds = (int)numPrintTimeout.Value,
+                    UseDefaultPdfReader = cbDefaultReader.Checked
                 };
 
                 var serializer = new XmlSerializer(typeof(AutoMailPrintSettings));
@@ -428,6 +443,8 @@ namespace AutoMailPrint
             public int DaysToKeepLogs { get; set; }
             public bool SendMail { get; set; }
             public string ErrorAddress { get; set; }
+            public int PrintTimeoutSeconds { get; set; }
+            public bool UseDefaultPdfReader { get; set; }
         }
         private void LoadSettingsFromFile()
         {
@@ -450,6 +467,15 @@ namespace AutoMailPrint
                         numKeepLog.Value = settings.DaysToKeepLogs;
                         chkSendMail.Checked = settings.SendMail;
                         tbErrorAddress.Text = settings.ErrorAddress;
+                        cbDefaultReader.Checked = settings.UseDefaultPdfReader;
+                        if (settings.PrintTimeoutSeconds > 0 && settings.PrintTimeoutSeconds <= numPrintTimeout.Maximum)
+                        {
+                            numPrintTimeout.Value = settings.PrintTimeoutSeconds;
+                        }
+                        else
+                        {
+                            numPrintTimeout.Value = 20; // Default
+                        }
                         // Drucker auswählen, falls vorhanden
                         if (!string.IsNullOrEmpty(settings.SelectedPrinter) && cbPrinters.Items.Contains(settings.SelectedPrinter))
                         {
@@ -476,6 +502,9 @@ namespace AutoMailPrint
                         tbErrorAddress.Enabled = false;
                         btnPrinters.Enabled = false;
                         btnTestErrorMail.Enabled = false;
+                        numPrintTimeout.Enabled = false;
+                        btnReloadReader.Enabled = false;
+                        cbDefaultReader.Enabled = false;
                         Log("Settings loaded successfully");
                         InitializeTimer((int)numInterval.Value);
                         _isTimerRunning = true;
@@ -700,7 +729,6 @@ namespace AutoMailPrint
                 Log($"Error loading the log: {ex.Message}");
             }
         }
-
         private void SavePdfAttachments(MimeMessage message, string attachmentsFolder)
         {
             foreach (var attachment in message.Attachments)
@@ -743,7 +771,7 @@ namespace AutoMailPrint
                 try
                 {
                     // Verwende den Standard-PDF-Reader, um die Datei zu drucken
-                    PrintPdfWithDefaultReader(filePath, printerName);
+                    PrintPdf(filePath, printerName, (int)numPrintTimeout.Value);
 
                     // Lösche die Datei nach dem Drucken
                     File.Delete(filePath);
@@ -759,29 +787,68 @@ namespace AutoMailPrint
                 }
             }
         }
-        void PrintPdfWithDefaultReader(string pdfPath, string printerName)
+        void PrintPdf(string pdfPath, string printerName, int maxWaitSeconds)
         {
             try
             {
-                // Starte den Standard-PDF-Reader mit Druckbefehl
-                var processStartInfo = new ProcessStartInfo
+                ProcessStartInfo processStartInfo;
+
+                // Prüfe, ob der Standard-Reader verwendet werden soll
+                if (cbDefaultReader.Checked)
                 {
-                    FileName = pdfPath,
-                    Verb = "printto",
-                    Arguments = $"\"{printerName}\"",
-                    CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    UseShellExecute = true // Verwende die Shell, um den Standard-Reader zu starten
-                };
+                    // Standard-Programm über Shell (wie gehabt)
+                    processStartInfo = new ProcessStartInfo
+                    {
+                        FileName = pdfPath,
+                        Verb = "printto",
+                        Arguments = $"\"{printerName}\"",
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        UseShellExecute = true
+                    };
+                }
+                else
+                {
+                    // Benutzerdefiniertes Programm aus ComboBox verwenden
+                    string selectedReader = cbReader.SelectedItem?.ToString();
+                    if (string.IsNullOrEmpty(selectedReader) || !File.Exists(selectedReader))
+                    {
+                        string msg = ("No valid PDF program selected!");
+                        SendMail(msg);
+                        Log(msg);
+                        throw new Exception("No valid PDF program selected!");
+                    }
+
+
+                    // Die meisten PDF-Reader unterstützen die /t-Option für Drucken
+                    // Beispiel für Adobe Reader: "<ReaderExe>" /t "<PDF>" "<Printer>"
+                    processStartInfo = new ProcessStartInfo
+                    {
+                        FileName = selectedReader,
+                        Arguments = $"\"{pdfPath}\" /t \"{printerName}\"",
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        UseShellExecute = false // Direktes Starten des Readers
+                    };
+                }
 
                 using (var process = Process.Start(processStartInfo))
                 {
                     if (process != null)
                     {
-                        process.WaitForExit(20000); // Warte maximal 20 Sekunden auf den Abschluss
+                        int maxWaitMs = maxWaitSeconds * 1000;
+                        int waitIntervalMs = 500;
+                        int waited = 0;
+
+                        while (!process.HasExited && waited < maxWaitMs)
+                        {
+                            System.Threading.Thread.Sleep(waitIntervalMs);
+                            waited += waitIntervalMs;
+                        }
+
                         if (!process.HasExited)
                         {
-                            process.Kill(); // Beende falls es hängt
+                            process.Kill();
                         }
                     }
                 }
@@ -791,6 +858,9 @@ namespace AutoMailPrint
             }
             catch (Exception ex)
             {
+                string msg = ($"Error printing the file {pdfPath}: {ex.Message}");
+                SendMail(msg);
+                Log(msg);
                 throw new Exception($"Error printing the file {pdfPath}: {ex.Message}");
             }
         }
@@ -1025,6 +1095,124 @@ namespace AutoMailPrint
                     Log("Mail could not be sent: " + ex.Message);
                 }
             }
+        }
+        private void LoadPdfReadersToComboBox()
+        {
+            cbReader.Items.Clear();
+
+            // 1. Standard-PDF-Reader ermitteln
+            string defaultReaderName = GetDefaultPdfReaderName();
+            if (!string.IsNullOrEmpty(defaultReaderName))
+            {
+                cbReader.Items.Add(defaultReaderName);
+            }
+
+            // 2. Weitere PDF-Reader aus OpenWithProgIDs hinzufügen
+            try
+            {
+                using (RegistryKey openWithKey = Registry.ClassesRoot.OpenSubKey(".pdf\\OpenWithProgIDs"))
+                {
+                    if (openWithKey != null)
+                    {
+                        foreach (var progId in openWithKey.GetValueNames())
+                        {
+                            string appName = GetAppNameFromProgId(progId);
+                            if (!string.IsNullOrEmpty(appName) && !cbReader.Items.Contains(appName))
+                            {
+                                cbReader.Items.Add(appName);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fehler beim Laden der PDF-Reader: " + ex.Message);
+            }
+
+            if (cbReader.Items.Count > 0)
+                cbReader.SelectedIndex = 0;
+        }
+        private string GetDefaultPdfReaderName()
+        {
+            try
+            {
+                using (RegistryKey userChoiceKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.pdf\UserChoice"))
+                {
+                    if (userChoiceKey != null)
+                    {
+                        string progId = userChoiceKey.GetValue("ProgId") as string;
+                        if (!string.IsNullOrEmpty(progId))
+                        {
+                            // Pfad zum Programm aus ProgID ermitteln
+                            using (RegistryKey commandKey = Registry.ClassesRoot.OpenSubKey(progId + @"\shell\open\command"))
+                            {
+                                if (commandKey != null)
+                                {
+                                    string command = commandKey.GetValue(null) as string;
+                                    if (!string.IsNullOrEmpty(command))
+                                    {
+                                        // Pfad aus dem command extrahieren
+                                        string exePath = ExtractExePath(command);
+                                        if (!string.IsNullOrEmpty(exePath) && System.IO.File.Exists(exePath))
+                                        {
+                                            // Dateiname als Programmname
+                                            return System.IO.Path.GetFileNameWithoutExtension(exePath);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Fehler ignorieren und null zurückgeben
+            }
+            return null;
+        }
+        private string ExtractExePath(string command)
+        {
+            // Beispiel command: "\"C:\\Program Files (x86)\\Adobe\\Acrobat Reader DC\\Reader\\AcroRd32.exe\" /n /s /o /h \"%1\""
+            var match = Regex.Match(command, "\"([^\"]+)\"");
+            if (match.Success)
+            {
+                return match.Groups[1].Value;
+            }
+            else
+            {
+                // Falls keine Anführungszeichen, nimm den ersten Teil bis zum Leerzeichen
+                int index = command.IndexOf(' ');
+                if (index > 0)
+                    return command.Substring(0, index);
+                else
+                    return command;
+            }
+        }
+        private string GetAppNameFromProgId(string progId)
+        {
+            try
+            {
+                using (RegistryKey progIdKey = Registry.ClassesRoot.OpenSubKey(progId + "\\Application"))
+                {
+                    if (progIdKey != null)
+                    {
+                        var appName = progIdKey.GetValue("ApplicationName") as string;
+                        if (!string.IsNullOrEmpty(appName))
+                            return appName;
+                    }
+                }
+            }
+            catch
+            {
+                // Ignorieren
+            }
+            return progId; // Fallback: ProgID als Name
+        }
+        private void cbDefaultReader_CheckedChanged(object sender, EventArgs e)
+        {
+            cbReader.Enabled = !cbDefaultReader.Checked;
         }
 
         
